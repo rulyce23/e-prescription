@@ -50,10 +50,15 @@ class AuthController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
+        $role = $request->input('role', 'pasien');
+        if (!in_array($role, ['admin', 'dokter', 'apoteker', 'pasien'])) {
+            $role = 'pasien';
+        }
         $user = \App\Models\User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
+            'role' => $role,
         ]);
 
         Auth::login($user);
