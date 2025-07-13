@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 13, 2025 at 01:39 PM
+-- Generation Time: Jul 13, 2025 at 07:38 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -122,7 +122,14 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (7, '2024_01_01_000004_create_resep_items_table', 1),
 (8, '2024_01_01_000005_create_resep_racikan_table', 1),
 (9, '2024_01_01_000006_create_resep_racikan_items_table', 1),
-(10, '2025_07_13_092933_create_personal_access_tokens_table', 1);
+(10, '2025_07_13_092933_create_personal_access_tokens_table', 1),
+(11, '2025_07_13_092934_add_completed_at_to_resep_table', 1),
+(12, '2025_07_13_133133_add_processing_status_to_resep_table', 1),
+(13, '2025_07_13_151844_add_completed_at_to_resep_table', 1),
+(14, '2025_07_13_162942_add_keluhan_diagnosa_to_resep_table', 1),
+(15, '2025_07_13_163556_add_pasien_to_role_enum', 1),
+(16, '2025_07_13_163825_update_resep_status_enum', 1),
+(17, '2025_07_13_164848_add_approval_columns_to_resep_table', 2);
 
 -- --------------------------------------------------------
 
@@ -131,7 +138,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 --
 
 CREATE TABLE `obatalkes_m` (
-  `obatalkes_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
   `obatalkes_kode` varchar(100) DEFAULT NULL,
   `obatalkes_nama` varchar(250) DEFAULT NULL,
   `stok` decimal(15,2) DEFAULT NULL,
@@ -151,7 +158,7 @@ CREATE TABLE `obatalkes_m` (
 -- Dumping data for table `obatalkes_m`
 --
 
-INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
+INSERT INTO `obatalkes_m` (`id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
 (1, 'ALK00000614', 'KASSA NON-XRAY 10 CM X 10 CM', 25.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (2, 'ALK00000776', 'POLYSORB 1 CL905', 1430.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (3, 'ALK00000741', 'VICRYL PLUS 2-0 VCP317 TAPER', 1307.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
@@ -543,7 +550,7 @@ INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `
 (389, 'OBT00000984', 'CENDO CYCLON 1% TETES MATA', 195.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (390, 'OBT00000668', 'DOXYCYCLIN 100 MG CAP', 4.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (391, 'OBT00000509', 'SEVOFLURANE BAXTER 250 ML', 119.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL);
-INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
+INSERT INTO `obatalkes_m` (`id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
 (392, 'BBK00000067', 'HITERGENT COBAS', 2054.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (393, 'BBK00000065', 'HBSAG CASSETE (FOKUS)', 338.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (394, 'ALK00000171', 'DIALYZER FRESENIUS F8HPS', 1952.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
@@ -924,7 +931,7 @@ INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `
 (769, 'OBT00000597', 'VISANNE TABLET 2 MG', 5247.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (770, 'ALK00000343', 'HARMONIC FOCUS CURVED SHEARS 17 CM (HAR17)', 19360.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (771, 'ALK00000059', 'BEDLINER CARE 100 X 190 CM', 425.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL);
-INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
+INSERT INTO `obatalkes_m` (`id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
 (772, 'ALK00000070', 'BISTURI NO 11 AESCULAP', 40.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (773, 'ALK00000062', 'BIBAG PART B FRESENIUS 650GR REGULER', 808.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (774, 'OBT00000599', 'VOLTAREN 25 MG TAB', 36.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
@@ -1317,7 +1324,7 @@ INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `
 (1161, 'A2910', 'Obat Neng ABCDE', 110.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (1162, 'A2905', 'ANTIMO TAB', 20.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (1163, 'OBT00001323', 'ANPIRIDE 2 MG TABLET', 42.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL);
-INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
+INSERT INTO `obatalkes_m` (`id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
 (1164, 'A2920', 'Bodrexin', 25.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (1165, 'A2928', 'Selang Infus', 53.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (1166, 'A2904', 'ALOVELL TAB', 10.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
@@ -1703,7 +1710,7 @@ INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `
 (1546, 'ALK00000224', 'ENSEAL G2 TISSUE SEALER, CURVED JAW 35 CM (NSLG2C35)', 20460.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (1547, 'OBT00000539', 'TELFAST PLUS TAB', 57.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (1548, 'ALK00000665', 'INTUBATING  STYLET NO 2 (100/120/200) - (PORTEX)', 1485.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL);
-INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
+INSERT INTO `obatalkes_m` (`id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
 (1549, 'OBT00000145', 'CLAST 0,5 MG TAB', 19.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (1550, 'OBT00001046', 'HARNAL D 0,2 MG TAB', 148.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (1551, 'ALK00000181', 'DISP PATIENT HOSE SYSTEM/BREATHING CIRCUIT WM (WM-28695)', 12650.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
@@ -2081,9 +2088,9 @@ INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `
 (1923, 'BBK00000201', 'MICROPLATE NEONATAL G6PD ASSAY (532-6100)', 71500.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (1924, 'BBK00000156', 'ANAEROBIC INDICATOR (BR0055B)-(DIPA)', 11990.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (1925, 'OBT00001183', 'NIMOTOP INFUS', 2981.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
-(1926, 'BBK00000196', 'LYSERCELL WNR 5 LTR (ZPPBL121531)', 49500.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL);
-INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
-(1927, 'OBT00001176', 'TRAMAL 50 MG CAP', 55.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
+(1926, 'BBK00000196', 'LYSERCELL WNR 5 LTR (ZPPBL121531)', 49500.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
+(1927, 'OBT00001176', 'TRAMAL 50 MG CAP', 55.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL);
+INSERT INTO `obatalkes_m` (`id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
 (1928, 'BBK00000194', 'LYPHOCHECK IMMUNOASSAY PLUS CONTROL LEVEL 1.2.3 (370)', 66935.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (1929, 'BBK00000192', 'LDH (COBAS) (20767123322)', 14583.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (1930, 'BBK00000190', 'LAMP HALOGEN JB12V24WF6 (CS 2100)', 23936.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
@@ -2469,9 +2476,9 @@ INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `
 (2310, 'ALK00001634', 'GURITA IBU PEREKAT ALL SIZE', 1346.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (2311, 'BBK00000200', 'Mg2 (COBAS)-(6481647190)', 10407.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (2312, 'BBK00000198', 'MAC CONKEY AGAR EUR PHARMA (21567)', 15400.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
-(2313, 'ALK00001632', 'PUR UMBILICAL CATHETER NO. 8 FR  40 CM SINGLE LUMEN (1270.08)', 5498.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL);
-INSERT INTO `obatalkes_m` (`obatalkes_id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
-(2314, 'ALK00001631', 'PUR UMBILICAL CATHETER NO. 5 FR  40 CM SINGLE LUMEN (1270.05)', 2475.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
+(2313, 'ALK00001632', 'PUR UMBILICAL CATHETER NO. 8 FR  40 CM SINGLE LUMEN (1270.08)', 5498.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
+(2314, 'ALK00001631', 'PUR UMBILICAL CATHETER NO. 5 FR  40 CM SINGLE LUMEN (1270.05)', 2475.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL);
+INSERT INTO `obatalkes_m` (`id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
 (2315, 'BBK00000195', 'LYSERCELL WDF 5 LTR (ZPPAL337564)', 89100.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (2316, 'BBK00000193', 'LDL-C GEN-3, COBAS (7005717190)', 73378.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (2317, 'ALK00001630', 'PUR UMBILICAL CATHETER NO. 4 FR  40 CM SINGLE LUMEN (1270.04)', 2475.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
@@ -2698,19 +2705,29 @@ CREATE TABLE `personal_access_tokens` (
 
 CREATE TABLE `resep` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `no_resep` varchar(255) NOT NULL,
-  `nama_pasien` varchar(255) NOT NULL,
-  `tanggal_resep` date NOT NULL,
-  `catatan` text DEFAULT NULL,
-  `status` enum('draft','diajukan','disetujui','selesai','ditolak') NOT NULL DEFAULT 'draft',
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `approved_by` bigint(20) UNSIGNED DEFAULT NULL,
-  `received_by` bigint(11) NOT NULL,
-  `rejected_by` bigint(20) NOT NULL,
-  `approved_at` timestamp NULL DEFAULT NULL,
+  `keluhan` text DEFAULT NULL,
+  `diagnosa` text DEFAULT NULL,
+  `nama_pasien` varchar(255) NOT NULL,
+  `status` enum('draft','pending','approved','rejected','processing','completed','diproses','selesai') DEFAULT 'draft',
+  `completed_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `approved_by` bigint(20) UNSIGNED DEFAULT NULL,
+  `rejected_by` bigint(20) UNSIGNED DEFAULT NULL,
+  `received_by` bigint(20) UNSIGNED DEFAULT NULL,
+  `approved_at` timestamp NULL DEFAULT NULL,
+  `rejected_at` timestamp NULL DEFAULT NULL,
+  `received_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `resep`
+--
+
+INSERT INTO `resep` (`id`, `user_id`, `keluhan`, `diagnosa`, `nama_pasien`, `status`, `completed_at`, `created_at`, `updated_at`, `deleted_at`, `approved_by`, `rejected_by`, `received_by`, `approved_at`, `rejected_at`, `received_at`) VALUES
+(1, 4, 'sakit pinggang', 'nyeri pinggang', 'adam', 'selesai', '2025-07-13 10:21:53', '2025-07-13 10:09:20', '2025-07-13 10:21:53', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2722,11 +2739,19 @@ CREATE TABLE `resep_items` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `resep_id` bigint(20) UNSIGNED NOT NULL,
   `obatalkes_id` bigint(20) UNSIGNED NOT NULL,
-  `signa_id` bigint(20) UNSIGNED NOT NULL,
-  `qty` decimal(10,2) NOT NULL,
+  `signa_m_id` bigint(20) UNSIGNED NOT NULL,
+  `qty` int(11) NOT NULL,
+  `aturan_pakai` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `resep_items`
+--
+
+INSERT INTO `resep_items` (`id`, `resep_id`, `obatalkes_id`, `signa_m_id`, `qty`, `aturan_pakai`, `created_at`, `updated_at`) VALUES
+(1, 1, 10, 2, 1, '2x sehari jika kambuh', '2025-07-13 10:09:20', '2025-07-13 10:09:20');
 
 -- --------------------------------------------------------
 
@@ -2738,10 +2763,19 @@ CREATE TABLE `resep_racikan` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `resep_id` bigint(20) UNSIGNED NOT NULL,
   `nama_racikan` varchar(255) NOT NULL,
-  `signa_id` bigint(20) UNSIGNED NOT NULL,
+  `signa_m_id` bigint(20) UNSIGNED NOT NULL,
+  `aturan_pakai` varchar(255) NOT NULL,
+  `qty` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `resep_racikan`
+--
+
+INSERT INTO `resep_racikan` (`id`, `resep_id`, `nama_racikan`, `signa_m_id`, `aturan_pakai`, `qty`, `created_at`, `updated_at`) VALUES
+(1, 1, 'ragone', 3, 'ada', 1, '2025-07-13 10:09:20', '2025-07-13 10:09:20');
 
 -- --------------------------------------------------------
 
@@ -2751,12 +2785,20 @@ CREATE TABLE `resep_racikan` (
 
 CREATE TABLE `resep_racikan_items` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `obatalkes_id` bigint(20) UNSIGNED NOT NULL,
   `racikan_id` bigint(20) UNSIGNED NOT NULL,
-  `qty` decimal(10,2) NOT NULL,
+  `obatalkes_id` bigint(20) UNSIGNED NOT NULL,
+  `qty` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `resep_racikan_items`
+--
+
+INSERT INTO `resep_racikan_items` (`id`, `racikan_id`, `obatalkes_id`, `qty`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 1, '2025-07-13 10:09:20', '2025-07-13 10:09:20'),
+(2, 1, 14, 1, '2025-07-13 10:09:20', '2025-07-13 10:09:20');
 
 -- --------------------------------------------------------
 
@@ -2773,13 +2815,6 @@ CREATE TABLE `sessions` (
   `last_activity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `sessions`
---
-
-INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('OJsCG0hZd9AKkN7MMLHoR3RJz2LU1dlpUoxlLpRz', 8, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiTTNKTXl1OG1LRG9EdFRuZ1FkWFBzekYxS0JNazh2dlhUNWhGS3FxOCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9yZXNlcCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjg7fQ==', 1752406763);
-
 -- --------------------------------------------------------
 
 --
@@ -2787,7 +2822,7 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 --
 
 CREATE TABLE `signa_m` (
-  `signa_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
   `signa_kode` varchar(100) DEFAULT NULL,
   `signa_nama` varchar(250) DEFAULT NULL,
   `additional_data` text DEFAULT NULL,
@@ -2806,7 +2841,7 @@ CREATE TABLE `signa_m` (
 -- Dumping data for table `signa_m`
 --
 
-INSERT INTO `signa_m` (`signa_id`, `signa_kode`, `signa_nama`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
+INSERT INTO `signa_m` (`id`, `signa_kode`, `signa_nama`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
 (1, '000.5 T', '1X SEHARI 0.5 TABLET (MALAM)', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (2, '000.5 T AC', '1X SEHARI 0.5 TABLET, SEBELUM MAKAN (MALAM)', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (3, '5DD2C', '5X SEHARI 2 KAPSUL', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
@@ -3210,7 +3245,7 @@ INSERT INTO `signa_m` (`signa_id`, `signa_kode`, `signa_nama`, `additional_data`
 (401, '1DD6G AS', '1X SEHARI 6 TETES PADA TELINGA KIRI', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (402, '1DD6G MI', '1X SEHARI 6 TETES (DIMINUM)', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (403, '1DD6G ND', '1X SEHARI 6 TETES PADA LUBANG HIDUNG KANAN', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL);
-INSERT INTO `signa_m` (`signa_id`, `signa_kode`, `signa_nama`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
+INSERT INTO `signa_m` (`id`, `signa_kode`, `signa_nama`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
 (404, '1DD6G NDS', '1X SEHARI 6 TETES PADA LUBANG HIDUNG KANAN DAN KIRI', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (405, '1DD6G OD', '1X SEHARI 6 TETES PADA MATA KANAN', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (406, '1DD6G ODS', '1X SEHARI 6 TETES PADA MATA KANAN DAN KIRI', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
@@ -3609,9 +3644,9 @@ INSERT INTO `signa_m` (`signa_id`, `signa_kode`, `signa_nama`, `additional_data`
 (799, '3DD3G NDS', '3X SEHARI 3 TETES PADA LUBANG HIDUNG KANAN DAN KIRI', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (800, '3DD3G OD', '3X SEHARI 3 TETES PADA MATA KANAN', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (801, '3DD3G ODS', '3X SEHARI 3 TETES PADA MATA KANAN DAN KIRI', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
-(802, '3DD3G OS', '3X SEHARI 3 TETES PADA MATA KIRI', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL);
-INSERT INTO `signa_m` (`signa_id`, `signa_kode`, `signa_nama`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
-(803, '3DD3IJ', '3X SEHARI 3 INJEKSI', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
+(802, '3DD3G OS', '3X SEHARI 3 TETES PADA MATA KIRI', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
+(803, '3DD3IJ', '3X SEHARI 3 INJEKSI', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL);
+INSERT INTO `signa_m` (`id`, `signa_kode`, `signa_nama`, `additional_data`, `created_date`, `created_by`, `modified_count`, `last_modified_date`, `last_modified_by`, `is_deleted`, `is_active`, `deleted_date`, `deleted_by`) VALUES
 (804, '3DD3ML AC', '3X SEHARI 3 ML (SEBELUM MAKAN)', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (805, '3DD3ML PC', '3X SEHARI 3 ML (SETELAH MAKAN)', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (806, '3DD3S', '3X SEHARI 3 SEMPROT HIDUNG', NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
@@ -3822,7 +3857,7 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('admin','dokter','apoteker','pasien') NOT NULL DEFAULT 'dokter',
+  `role` enum('admin','dokter','apoteker','pasien') DEFAULT 'dokter',
   `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -3833,14 +3868,17 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Administrator', 'admin@eprescription.com', '2025-07-13 03:33:01', '$2y$12$HvvMiOu1Arj01DXcx2vy6ejqnZS9FVBufWfjmqN502gLmdiSeyjxG', 'admin', NULL, '2025-07-13 03:33:01', '2025-07-13 03:33:01'),
-(2, 'Dr. Sarah Johnson', 'dokter@eprescription.com', '2025-07-13 03:33:01', '$2y$12$ix7ebFcNtfjFJ7rTYeA4SuFpLe52Zn2guQjUWz4IIuSWm0729r.SW', 'dokter', NULL, '2025-07-13 03:33:01', '2025-07-13 03:33:01'),
-(3, 'Apt. Michael Chen', 'apoteker@eprescription.com', '2025-07-13 03:33:02', '$2y$12$032XYcTqllkI.IiSXaXHfOHtopxqWQgKBO3m8yVgbCo26hXIQjOxu', 'apoteker', NULL, '2025-07-13 03:33:02', '2025-07-13 03:33:02'),
-(4, 'Budi Santoso', 'pasien1@eprescription.com', '2025-07-13 03:33:02', '$2y$12$fs0yBvI0sfHsvGBqpusuXOH.TNQVny62tg99a4r5hiIwkJrZtEH9O', 'pasien', NULL, '2025-07-13 03:33:02', '2025-07-13 03:33:02'),
-(5, 'Siti Nurhaliza', 'pasien2@eprescription.com', '2025-07-13 03:33:02', '$2y$12$1yNakRxnEMp9LBph9ZeIQOVA7SlKKyMUkncwrVZ/BieUzl1Q4yCiW', 'pasien', NULL, '2025-07-13 03:33:02', '2025-07-13 03:33:02'),
-(6, 'Ahmad Rizki', 'pasien3@eprescription.com', '2025-07-13 03:33:02', '$2y$12$0hRye.dopqBJhKDQHCPe1uw4q9zWQDb5ZgTtkgKI.htFXEZNPUPNy', 'pasien', NULL, '2025-07-13 03:33:02', '2025-07-13 03:33:02'),
-(7, 'Dewi Sartika', 'pasien4@eprescription.com', '2025-07-13 03:33:03', '$2y$12$vuw.wXRMZEv6mLXIYd5g6uj34nxtifQLAoRSPGQjW2ewtlQW5zJZi', 'pasien', NULL, '2025-07-13 03:33:03', '2025-07-13 03:33:03'),
-(8, 'Rudi Hartono', 'pasien5@eprescription.com', '2025-07-13 03:33:03', '$2y$12$O7jh.fRX0HNgxt.AcpO2Sexk7BDwzCY0oQW40sty6Pm7G4oi5CKhW', 'pasien', NULL, '2025-07-13 03:33:03', '2025-07-13 03:33:03');
+(1, 'Administrator', 'admin@eprescription.com', '2025-07-13 09:42:27', '$2y$12$cAIBB43rV5CMVkb5VxMQG.N04cW2fZf5CdrOPDiCeJbFzUbTkaqpK', 'admin', NULL, '2025-07-13 09:42:27', '2025-07-13 09:42:27'),
+(2, 'Dr. Sarah Johnson', 'dokter@eprescription.com', '2025-07-13 09:42:27', '$2y$12$wC4fCaobrg5E.358EJ8V1ODmHHfUkoL/rRERBMjL6jIcvOX.yHAcy', 'dokter', NULL, '2025-07-13 09:42:27', '2025-07-13 09:42:27'),
+(3, 'Apt. Michael Chen', 'apoteker@eprescription.com', '2025-07-13 09:42:27', '$2y$12$zdgxY49uNTstEyvHaZ8yCOJNMbVxWDvWrZT8UvboIxC7FY1Wxgyoe', 'apoteker', NULL, '2025-07-13 09:42:27', '2025-07-13 09:42:27'),
+(4, 'Budi Santoso', 'pasien1@eprescription.com', '2025-07-13 09:42:28', '$2y$12$yrqPvK2hjTDrLqlYpejLzOE5zbAnjR928N5IIR6fKbdFw3U46qsI6', 'pasien', NULL, '2025-07-13 09:42:28', '2025-07-13 09:42:28'),
+(5, 'Siti Nurhaliza', 'pasien2@eprescription.com', '2025-07-13 09:42:28', '$2y$12$GycW/PHlpgq5WEJa.k0e4eTKGdRHEixkaMTsIml3pzjiltZ1axqMC', 'pasien', NULL, '2025-07-13 09:42:28', '2025-07-13 09:42:28'),
+(6, 'Ahmad Rizki', 'pasien3@eprescription.com', '2025-07-13 09:42:28', '$2y$12$zFuQ4RPsUqBzMxjJJE9u/et/FvZnGIXHxUCzcd79f9icx5vPhzWMm', 'pasien', NULL, '2025-07-13 09:42:28', '2025-07-13 09:42:28'),
+(7, 'Dewi Sartika', 'pasien4@eprescription.com', '2025-07-13 09:42:28', '$2y$12$nYExSQm7PHBRA9tmVzKE.u96rnZfXi2pTYeARdVavgiYlxBD04jlC', 'pasien', NULL, '2025-07-13 09:42:28', '2025-07-13 09:42:28'),
+(8, 'Rudi Hartono', 'pasien5@eprescription.com', '2025-07-13 09:42:29', '$2y$12$jF1dk49ZDSd1mHhvxKzKNuAaHRYMKj2h1SNrtbiryKwb3X1OMEae2', 'pasien', NULL, '2025-07-13 09:42:29', '2025-07-13 09:42:29'),
+(9, 'Pasien Test', 'pasien@test.com', NULL, '$2y$12$BMjMwGZebV.XbxH5IISyouCMeawyLdj.H3y3SSuvV4NDj0fwpN/jq', 'pasien', NULL, '2025-07-13 09:42:30', '2025-07-13 09:42:30'),
+(10, 'Apoteker Test', 'apoteker@test.com', NULL, '$2y$12$nglOv62GrXIQOHElDnugHe/CAaqzjhg6HqUZU6na0tRoUFnmc15pq', 'apoteker', NULL, '2025-07-13 09:42:30', '2025-07-13 09:42:30'),
+(11, 'Admin Test', 'admin@test.com', NULL, '$2y$12$ms46vNSmHwqU3JCFEJ1Upu.pkd3cZKf8Y/QbJWmXRrpBGXpLd0b3u', 'admin', NULL, '2025-07-13 09:42:30', '2025-07-13 09:42:30');
 
 --
 -- Indexes for dumped tables
@@ -3888,7 +3926,7 @@ ALTER TABLE `migrations`
 -- Indexes for table `obatalkes_m`
 --
 ALTER TABLE `obatalkes_m`
-  ADD PRIMARY KEY (`obatalkes_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `password_reset_tokens`
@@ -3909,9 +3947,10 @@ ALTER TABLE `personal_access_tokens`
 --
 ALTER TABLE `resep`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `resep_no_resep_unique` (`no_resep`),
   ADD KEY `resep_user_id_foreign` (`user_id`),
-  ADD KEY `resep_approved_by_foreign` (`approved_by`);
+  ADD KEY `resep_approved_by_foreign` (`approved_by`),
+  ADD KEY `resep_rejected_by_foreign` (`rejected_by`),
+  ADD KEY `resep_received_by_foreign` (`received_by`);
 
 --
 -- Indexes for table `resep_items`
@@ -3920,7 +3959,7 @@ ALTER TABLE `resep_items`
   ADD PRIMARY KEY (`id`),
   ADD KEY `resep_items_resep_id_foreign` (`resep_id`),
   ADD KEY `resep_items_obatalkes_id_foreign` (`obatalkes_id`),
-  ADD KEY `resep_items_signa_id_foreign` (`signa_id`);
+  ADD KEY `resep_items_signa_m_id_foreign` (`signa_m_id`);
 
 --
 -- Indexes for table `resep_racikan`
@@ -3928,15 +3967,15 @@ ALTER TABLE `resep_items`
 ALTER TABLE `resep_racikan`
   ADD PRIMARY KEY (`id`),
   ADD KEY `resep_racikan_resep_id_foreign` (`resep_id`),
-  ADD KEY `resep_racikan_signa_id_foreign` (`signa_id`);
+  ADD KEY `resep_racikan_signa_m_id_foreign` (`signa_m_id`);
 
 --
 -- Indexes for table `resep_racikan_items`
 --
 ALTER TABLE `resep_racikan_items`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `resep_racikan_items_obatalkes_id_foreign` (`obatalkes_id`),
-  ADD KEY `resep_racikan_items_racikan_id_foreign` (`racikan_id`);
+  ADD KEY `resep_racikan_items_racikan_id_foreign` (`racikan_id`),
+  ADD KEY `resep_racikan_items_obatalkes_id_foreign` (`obatalkes_id`);
 
 --
 -- Indexes for table `sessions`
@@ -3950,7 +3989,7 @@ ALTER TABLE `sessions`
 -- Indexes for table `signa_m`
 --
 ALTER TABLE `signa_m`
-  ADD PRIMARY KEY (`signa_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -3979,13 +4018,13 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `obatalkes_m`
 --
 ALTER TABLE `obatalkes_m`
-  MODIFY `obatalkes_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2501;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2501;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -3997,37 +4036,37 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `resep`
 --
 ALTER TABLE `resep`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `resep_items`
 --
 ALTER TABLE `resep_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `resep_racikan`
 --
 ALTER TABLE `resep_racikan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `resep_racikan_items`
 --
 ALTER TABLE `resep_racikan_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `signa_m`
 --
 ALTER TABLE `signa_m`
-  MODIFY `signa_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1001;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1001;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
@@ -4037,29 +4076,31 @@ ALTER TABLE `users`
 -- Constraints for table `resep`
 --
 ALTER TABLE `resep`
-  ADD CONSTRAINT `resep_approved_by_foreign` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `resep_approved_by_foreign` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `resep_received_by_foreign` FOREIGN KEY (`received_by`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `resep_rejected_by_foreign` FOREIGN KEY (`rejected_by`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `resep_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `resep_items`
 --
 ALTER TABLE `resep_items`
-  ADD CONSTRAINT `resep_items_obatalkes_id_foreign` FOREIGN KEY (`obatalkes_id`) REFERENCES `obatalkes_m` (`obatalkes_id`),
+  ADD CONSTRAINT `resep_items_obatalkes_id_foreign` FOREIGN KEY (`obatalkes_id`) REFERENCES `obatalkes_m` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `resep_items_resep_id_foreign` FOREIGN KEY (`resep_id`) REFERENCES `resep` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `resep_items_signa_id_foreign` FOREIGN KEY (`signa_id`) REFERENCES `signa_m` (`signa_id`);
+  ADD CONSTRAINT `resep_items_signa_m_id_foreign` FOREIGN KEY (`signa_m_id`) REFERENCES `signa_m` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `resep_racikan`
 --
 ALTER TABLE `resep_racikan`
   ADD CONSTRAINT `resep_racikan_resep_id_foreign` FOREIGN KEY (`resep_id`) REFERENCES `resep` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `resep_racikan_signa_id_foreign` FOREIGN KEY (`signa_id`) REFERENCES `signa_m` (`signa_id`);
+  ADD CONSTRAINT `resep_racikan_signa_m_id_foreign` FOREIGN KEY (`signa_m_id`) REFERENCES `signa_m` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `resep_racikan_items`
 --
 ALTER TABLE `resep_racikan_items`
-  ADD CONSTRAINT `resep_racikan_items_obatalkes_id_foreign` FOREIGN KEY (`obatalkes_id`) REFERENCES `obatalkes_m` (`obatalkes_id`),
+  ADD CONSTRAINT `resep_racikan_items_obatalkes_id_foreign` FOREIGN KEY (`obatalkes_id`) REFERENCES `obatalkes_m` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `resep_racikan_items_racikan_id_foreign` FOREIGN KEY (`racikan_id`) REFERENCES `resep_racikan` (`id`) ON DELETE CASCADE;
 COMMIT;
 
