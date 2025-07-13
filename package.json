@@ -1,0 +1,12 @@
+{
+    "$schema": "https://json.schemastore.org/package.json",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "echo 'No build process needed'",
+        "dev": "echo 'No dev process needed'"
+    },
+    "devDependencies": {
+        "axios": "^1.8.2"
+    }
+}
