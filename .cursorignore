@@ -1,0 +1,10 @@
+# Ignore environment config
+.env
+
+# Ignore node_modules and vendor
+node_modules/
+vendor/
+
+# Ignore logs and cache
+storage/logs/
+storage/framework/

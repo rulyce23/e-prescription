@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /vendor/
 node_modules/
 npm-debug.log
@@ -28,3 +29,86 @@ Homestead.json
 .env.production
 .phpactor.json
 auth.json
+=======
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
+
+# Laravel specific
+/bootstrap/cache/*.php
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+/storage/app/public/*
+/public/build
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.cache
+
+# Backup files
+*.bak
+*.backup
+
+# Compiled files
+*.compiled
+*.min.js
+*.min.css
+
+# Package files
+package-lock.json
+yarn.lock
+composer.lock
+
+# Environment files
+.env.local
+.env.development
+.env.testing
+.env.staging
+
+# Deployment files
+deployment/
+eprescription-*.zip
+eprescription-*.tar.gz
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Testing
+/coverage
+.phpunit.cache
+>>>>>>> 8cf5052 (Initial commit: E-Prescription System with Laravel)
