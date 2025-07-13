@@ -39,6 +39,10 @@ Route::middleware('auth')->group(function () {
     })->middleware(['throttle:6,1'])->name('verification.send');
 });
 
+// Register routes
+Route::get('/register', [App\Http\Controllers\AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
+
 // Protected routes (auth required)
 Route::middleware(['auth'])->group(function () {
     // Dashboard
