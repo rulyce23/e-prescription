@@ -188,7 +188,7 @@ class ResepController extends Controller
 
         $resep->update([
             'status' => $request->status,
-            'completed_at' => $request->status === 'selesai' ? now() : null
+            'completed_at' => $request->status === 'selesai' ? $request->status === 'selesai' : null
         ]);
 
         // Send internal notification
