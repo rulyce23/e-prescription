@@ -204,6 +204,19 @@
                 </ul>
                 
                 <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="{{ route('notifications.index') }}">
+                            <i class="fas fa-bell"></i> Notifikasi
+                            @php
+                                $unreadCount = Auth::user()->unreadNotifications()->count();
+                            @endphp
+                            @if($unreadCount > 0)
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ $unreadCount > 99 ? '99+' : $unreadCount }}
+                                </span>
+                            @endif
+                        </a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user-circle"></i> {{ Auth::user()->name ?? 'User' }}
@@ -253,6 +266,15 @@
                         </a>
                         <a class="nav-link {{ request()->routeIs('signa.*') ? 'active' : '' }}" href="{{ route('signa.index') }}">
                             <i class="fas fa-clipboard-list"></i> Signa
+                        </a>
+                        <a class="nav-link {{ request()->routeIs('notifications.*') ? 'active' : '' }}" href="{{ route('notifications.index') }}">
+                            <i class="fas fa-bell"></i> Notifikasi
+                            @php
+                                $unreadCount = Auth::user()->unreadNotifications()->count();
+                            @endphp
+                            @if($unreadCount > 0)
+                                <span class="badge bg-danger ms-2">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>
+                            @endif
                         </a>
                     </nav>
                 </div>

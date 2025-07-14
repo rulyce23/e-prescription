@@ -8,6 +8,9 @@ use App\Models\ResepRacikan;
 use App\Models\ResepRacikanItem;
 use App\Models\ObatalkesM;
 use App\Models\SignaM;
+use App\Models\Apotek;
+use App\Services\WhatsAppService;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -43,13 +46,18 @@ class ResepController extends Controller
     {
         $obatalkes = ObatalkesM::where('is_deleted', false)->where('stok', '>', 0)->get();
         $signa = SignaM::where('is_deleted', false)->get();
-        return view('resep.create', compact('obatalkes', 'signa'));
+        $apotek = Apotek::active()->get();
+        $user = Auth::user();
+        return view('resep.create', compact('obatalkes', 'signa', 'apotek', 'user'));
     }
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+        
         $request->validate([
             'nama_pasien' => 'required|string|max:255',
+            'apotek_id' => 'required|exists:apotek,id',
             'keluhan' => 'required|string',
             'diagnosa' => 'required|string',
             'items' => 'required|array|min:1',
@@ -67,12 +75,36 @@ class ResepController extends Controller
             'racikan.*.items.*.qty' => 'required|integer|min:1',
         ]);
 
+        // Validasi nama pasien harus sesuai dengan user yang login
+        if ($request->nama_pasien !== $user->name) {
+            return back()->withErrors(['nama_pasien' => 'Nama pasien harus sesuai dengan user yang login.'])->withInput();
+        }
+
         DB::transaction(function () use ($request) {
+            // Generate nomor antrian
+            $today = now()->toDateString();
+            $apotekId = $request->apotek_id;
+            $apotek = Apotek::find($apotekId);
+            $kodeApotek = $apotek ? strtoupper(substr(preg_replace('/[^A-Z]/i', '', $apotek->nama_apotek), 0, 1)) : 'A';
+            $lastResep = Resep::where('apotek_id', $apotekId)
+                ->where('tgl_pengajuan', $today)
+                ->orderByDesc('no_antrian')
+                ->first();
+            if ($lastResep && preg_match('/(\d{3})$/', $lastResep->no_antrian, $m)) {
+                $nextNo = intval($m[1]) + 1;
+            } else {
+                $nextNo = 1;
+            }
+            $noAntrian = $kodeApotek . '-' . str_pad($nextNo, 3, '0', STR_PAD_LEFT);
+
             $resep = Resep::create([
                 'user_id' => Auth::id(),
+                'apotek_id' => $request->apotek_id,
+                'no_antrian' => $noAntrian,
                 'nama_pasien' => $request->nama_pasien,
                 'keluhan' => $request->keluhan,
                 'diagnosa' => $request->diagnosa,
+                'tgl_pengajuan' => $today,
                 'status' => 'pending',
             ]);
             // Non racikan
@@ -136,10 +168,23 @@ class ResepController extends Controller
             'status' => 'required|in:diproses,selesai'
         ]);
 
-            $resep->update([
+        $resep->update([
             'status' => $request->status,
             'completed_at' => $request->status === 'selesai' ? now() : null
         ]);
+
+        // Send internal notification
+        try {
+            $notificationService = new NotificationService();
+            if ($request->status === 'diproses') {
+                $notificationService->sendPrescriptionProcessingNotification($resep);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Failed to send internal notification', [
+                'resep_id' => $resep->id,
+                'error' => $e->getMessage()
+            ]);
+        }
         
         return redirect()->route('resep.index')->with('success', 'Status resep berhasil diupdate.');
     }
@@ -220,8 +265,31 @@ class ResepController extends Controller
             'status' => 'completed',
             'completed_at' => now()
         ]);
+
+        // Send WhatsApp notification
+        try {
+            $whatsappService = new WhatsAppService();
+            $whatsappService->sendPrescriptionCompletionNotification($resep);
+        } catch (\Exception $e) {
+            // Log error but don't fail the completion
+            \Log::error('Failed to send WhatsApp notification', [
+                'resep_id' => $resep->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+
+        // Send internal notification
+        try {
+            $notificationService = new NotificationService();
+            $notificationService->sendPrescriptionCompletionNotification($resep);
+        } catch (\Exception $e) {
+            \Log::error('Failed to send internal notification', [
+                'resep_id' => $resep->id,
+                'error' => $e->getMessage()
+            ]);
+        }
         
-        return redirect()->route('resep.index')->with('success', 'Resep berhasil diselesaikan.');
+        return redirect()->route('resep.index')->with('success', 'Resep berhasil diselesaikan dan notifikasi telah dikirim.');
     }
 
     public function processing()

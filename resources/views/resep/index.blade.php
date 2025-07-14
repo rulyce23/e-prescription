@@ -23,7 +23,9 @@
         <thead>
             <tr>
                 <th>#</th>
+                <th>No. Antrian</th>
                 <th>Pasien</th>
+                <th>Apotek</th>
                 <th>User</th>
                 <th>Status</th>
                 <th>Tanggal</th>
@@ -34,7 +36,9 @@
             @forelse($reseps as $resep)
             <tr>
                 <td>{{ $loop->iteration + ($reseps->currentPage() - 1) * $reseps->perPage() }}</td>
+                <td>{{ $resep->no_antrian ?? '-' }}</td>
                 <td>{{ $resep->nama_pasien }}</td>
+                <td>{{ $resep->apotek->nama_apotek ?? '-' }}</td>
                 <td>{{ $resep->user->name ?? '-' }}</td>
                 <td>
                     <span class="badge bg-{{ $resep->status === 'pending' ? 'warning' : ($resep->status === 'diproses' ? 'info' : 'success') }}">
@@ -76,7 +80,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="text-center">Belum ada resep.</td>
+                <td colspan="8" class="text-center">Belum ada resep.</td>
             </tr>
             @endforelse
         </tbody>

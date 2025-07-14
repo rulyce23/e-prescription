@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // Call seeders in order
         $this->call([
+            ApotekSeeder::class,
             UserSeeder::class,
             SignaSeeder::class,
             ObatalkesSeeder::class,
