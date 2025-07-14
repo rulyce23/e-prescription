@@ -60,4 +60,23 @@ class Apotek extends Model
     {
         return $query->where('is_active', true);
     }
+
+    private function formatPhoneNumber($phoneNumber)
+    {
+        // Hapus karakter non-digit
+        $phone = preg_replace('/[^0-9]/', '', $phoneNumber);
+
+        // Jika mulai dengan 0, ganti dengan 62
+        if (substr($phone, 0, 1) === '0') {
+            $phone = '62' . substr($phone, 1);
+        }
+
+        // Jika sudah mulai dengan 62, biarkan
+        // Jika tidak, tambahkan 62 di depan
+        if (substr($phone, 0, 2) !== '62') {
+            $phone = '62' . $phone;
+        }
+
+        return $phone;
+    }
 } 

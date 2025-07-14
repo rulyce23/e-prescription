@@ -7,7 +7,10 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>Daftar Resep</h3>
         <div>
-            @if(Auth::user()->isApoteker())
+            @if(Auth::user()->isApoteker() || Auth::user()->isFarmasi())
+                <span class="badge bg-info me-2">
+                    <i class="fas fa-store"></i> {{ Auth::user()->apotek->nama_apotek ?? 'Apotek' }}
+                </span>
                 <a href="{{ route('resep.processing') }}" class="btn btn-info"><i class="fas fa-cog"></i> Sedang Diproses</a>
                 <a href="{{ route('resep.completed') }}" class="btn btn-success"><i class="fas fa-check"></i> Selesai</a>
             @endif

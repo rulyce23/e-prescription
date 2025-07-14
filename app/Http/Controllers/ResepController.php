@@ -23,20 +23,21 @@ class ResepController extends Controller
         $user = Auth::user();
         
         if ($user->isPasien()) {
-            // Pasien hanya melihat resep miliknya
-            $reseps = Resep::with('user')
+            // Pasien hanya melihat resep miliknya sendiri
+            $reseps = Resep::with(['user', 'apotek'])
                           ->where('user_id', $user->id)
                           ->latest()
                           ->paginate(10);
-        } elseif ($user->isApoteker()) {
-            // Apoteker hanya melihat resep dengan status pending
-            $reseps = Resep::with('user')
+        } elseif ($user->isApoteker() || $user->isFarmasi()) {
+            // Apoteker/Farmasi hanya melihat resep di apoteknya dengan status pending
+            $reseps = Resep::with(['user', 'apotek'])
+                          ->where('apotek_id', $user->apotek_id)
                           ->where('status', 'pending')
                           ->latest()
-                     ->paginate(10);
+                          ->paginate(10);
         } else {
             // Admin dan dokter melihat semua resep
-            $reseps = Resep::with('user')->latest()->paginate(10);
+            $reseps = Resep::with(['user', 'apotek'])->latest()->paginate(10);
         }
 
         return view('resep.index', compact('reseps'));
@@ -152,6 +153,18 @@ class ResepController extends Controller
 
     public function show(Resep $resep)
     {
+        $user = Auth::user();
+        
+        // Pasien hanya bisa melihat resep miliknya sendiri
+        if ($user->isPasien() && $resep->user_id !== $user->id) {
+            abort(403, 'Anda tidak memiliki akses ke resep ini.');
+        }
+        
+        // Apoteker/Farmasi hanya bisa melihat resep di apoteknya
+        if (($user->isApoteker() || $user->isFarmasi()) && $resep->apotek_id !== $user->apotek_id) {
+            abort(403, 'Anda tidak memiliki akses ke resep ini.');
+        }
+        
         $resep->load(['user', 'items.obatalkes', 'items.signa', 'racikan.racikanItems.obatalkes', 'racikan.signa']);
         return view('resep.show', compact('resep'));
     }
@@ -160,8 +173,13 @@ class ResepController extends Controller
     {
         $user = Auth::user();
         
-        if (!$user->isApoteker()) {
+        if (!$user->isApoteker() && !$user->isFarmasi()) {
             abort(403, 'Unauthorized');
+        }
+
+        // Apoteker/Farmasi hanya bisa update resep di apoteknya
+        if ($resep->apotek_id !== $user->apotek_id) {
+            abort(403, 'Anda tidak memiliki akses ke resep ini.');
         }
 
         $request->validate([
@@ -197,6 +215,18 @@ class ResepController extends Controller
 
     public function pdf(Resep $resep)
     {
+        $user = Auth::user();
+        
+        // Pasien hanya bisa download PDF resep miliknya sendiri
+        if ($user->isPasien() && $resep->user_id !== $user->id) {
+            abort(403, 'Anda tidak memiliki akses ke resep ini.');
+        }
+        
+        // Apoteker/Farmasi hanya bisa download PDF resep di apoteknya
+        if (($user->isApoteker() || $user->isFarmasi()) && $resep->apotek_id !== $user->apotek_id) {
+            abort(403, 'Anda tidak memiliki akses ke resep ini.');
+        }
+        
         $resep->load(['user', 'items.obatalkes', 'items.signa', 'racikan.racikanItems.obatalkes', 'racikan.signa']);
         $pdf = Pdf::loadView('resep.pdf', compact('resep'));
         return $pdf->download('resep-'.$resep->id.'.pdf');
@@ -260,6 +290,11 @@ class ResepController extends Controller
         if (!$user->canReceivePrescription()) {
             abort(403, 'Unauthorized');
         }
+
+        // Apoteker/Farmasi hanya bisa complete resep di apoteknya
+        if ($resep->apotek_id !== $user->apotek_id) {
+            abort(403, 'Anda tidak memiliki akses ke resep ini.');
+        }
         
         $resep->update([
             'status' => 'completed',
@@ -296,11 +331,12 @@ class ResepController extends Controller
     {
         $user = Auth::user();
         
-        if (!$user->isApoteker()) {
+        if (!$user->isApoteker() && !$user->isFarmasi()) {
             abort(403, 'Unauthorized');
         }
         
-        $reseps = Resep::with('user')
+        $reseps = Resep::with(['user', 'apotek'])
+                      ->where('apotek_id', $user->apotek_id)
                       ->where('status', 'diproses')
                       ->latest()
                       ->paginate(10);
@@ -312,11 +348,12 @@ class ResepController extends Controller
     {
         $user = Auth::user();
         
-        if (!$user->isApoteker()) {
+        if (!$user->isApoteker() && !$user->isFarmasi()) {
             abort(403, 'Unauthorized');
         }
         
-        $reseps = Resep::with('user')
+        $reseps = Resep::with(['user', 'apotek'])
+                      ->where('apotek_id', $user->apotek_id)
                       ->where('status', 'selesai')
                       ->latest()
                       ->paginate(10);

@@ -253,7 +253,7 @@
                         <a class="nav-link {{ request()->routeIs('resep.*') ? 'active' : '' }}" href="{{ route('resep.index') }}">
                             <i class="fas fa-prescription"></i> Resep
                         </a>
-                        @if(Auth::user()->isApoteker())
+                        @if(Auth::user()->isApoteker() || Auth::user()->isFarmasi())
                             <a class="nav-link {{ request()->routeIs('resep.processing') ? 'active' : '' }}" href="{{ route('resep.processing') }}">
                                 <i class="fas fa-cog"></i> Sedang Diproses
                             </a>
