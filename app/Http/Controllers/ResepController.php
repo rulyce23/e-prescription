@@ -34,7 +34,7 @@ class ResepController extends Controller
                           ->where('apotek_id', $user->apotek_id)
                           ->where('status', 'pending')
                           ->latest()
-                          ->paginate(10);
+                     ->paginate(10);
         } else {
             // Admin dan dokter melihat semua resep
             $reseps = Resep::with(['user', 'apotek'])->latest()->paginate(10);
@@ -55,7 +55,7 @@ class ResepController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        
+
         $request->validate([
             'nama_pasien' => 'required|string|max:255',
             'apotek_id' => 'required|exists:apotek,id',
