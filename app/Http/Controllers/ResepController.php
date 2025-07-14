@@ -11,36 +11,53 @@ use App\Models\SignaM;
 use App\Models\Apotek;
 use App\Services\WhatsAppService;
 use App\Services\NotificationService;
+use App\Exports\ResepExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class ResepController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $apotekId = $request->get('apotek_id');
+        $status = $request->get('status');
+        
+        // Get all apotek for filter dropdown (only for admin and dokter)
+        $apoteks = null;
+        if ($user->isAdmin() || $user->isDokter()) {
+            $apoteks = Apotek::active()->get();
+        }
         
         if ($user->isPasien()) {
             // Pasien hanya melihat resep miliknya sendiri
-            $reseps = Resep::with(['user', 'apotek'])
-                          ->where('user_id', $user->id)
-                          ->latest()
-                          ->paginate(10);
+            $query = Resep::with(['user', 'apotek'])
+                          ->where('user_id', $user->id);
         } elseif ($user->isApoteker() || $user->isFarmasi()) {
-            // Apoteker/Farmasi hanya melihat resep di apoteknya dengan status pending
-            $reseps = Resep::with(['user', 'apotek'])
-                          ->where('apotek_id', $user->apotek_id)
-                          ->where('status', 'pending')
-                          ->latest()
-                     ->paginate(10);
+            // Apoteker/Farmasi hanya melihat resep di apoteknya
+            $query = Resep::with(['user', 'apotek'])
+                          ->where('apotek_id', $user->apotek_id);
         } else {
             // Admin dan dokter melihat semua resep
-            $reseps = Resep::with(['user', 'apotek'])->latest()->paginate(10);
+            $query = Resep::with(['user', 'apotek']);
         }
 
-        return view('resep.index', compact('reseps'));
+        // Apply filters
+        if ($apotekId && ($user->isAdmin() || $user->isDokter())) {
+            $query->where('apotek_id', $apotekId);
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $reseps = $query->latest()->paginate(10);
+
+        return view('resep.index', compact('reseps', 'apoteks', 'apotekId', 'status'));
     }
 
     public function create()
@@ -297,7 +314,7 @@ class ResepController extends Controller
         }
         
         $resep->update([
-            'status' => 'completed',
+            'status' => 'selesai',
             'completed_at' => now()
         ]);
 
@@ -355,9 +372,97 @@ class ResepController extends Controller
         $reseps = Resep::with(['user', 'apotek'])
                       ->where('apotek_id', $user->apotek_id)
                       ->where('status', 'selesai')
-                      ->latest()
                       ->paginate(10);
         
         return view('resep.completed', compact('reseps'));
+    }
+
+    public function export(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Validate user permissions
+        if (!$user->isAdmin() && !$user->isDokter() && !$user->isApoteker() && !$user->isFarmasi() && !$user->isPasien()) {
+            abort(403, 'Unauthorized');
+        }
+
+        $apotekId = $request->get('apotek_id');
+        $status = $request->get('status');
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+
+        // Additional validation for admin/dokter filtering
+        if (($apotekId || $status) && !$user->isAdmin() && !$user->isDokter()) {
+            abort(403, 'Filtering not allowed for this role');
+        }
+
+        $export = new ResepExport($apotekId, $status, $startDate, $endDate);
+        
+        $filename = 'resep_' . date('Y-m-d_H-i-s') . '.xlsx';
+        
+        return Excel::download($export, $filename);
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $user = Auth::user();
+        $apotekId = $request->get('apotek_id');
+        $status = $request->get('status');
+
+        // Query resep sesuai role dan filter
+        if ($user->isPasien()) {
+            $query = \App\Models\Resep::with(['user', 'apotek', 'items.obatalkes', 'racikan.racikanItems.obatalkes'])
+                ->where('user_id', $user->id);
+        } elseif ($user->isApoteker() || $user->isFarmasi()) {
+            $query = \App\Models\Resep::with(['user', 'apotek', 'items.obatalkes', 'racikan.racikanItems.obatalkes'])
+                ->where('apotek_id', $user->apotek_id);
+        } else {
+            $query = \App\Models\Resep::with(['user', 'apotek', 'items.obatalkes', 'racikan.racikanItems.obatalkes']);
+        }
+        if ($apotekId && ($user->isAdmin() || $user->isDokter())) {
+            $query->where('apotek_id', $apotekId);
+        }
+        if ($status) {
+            $query->where('status', $status);
+        }
+        $reseps = $query->latest()->get();
+
+        $filename = 'resep_' . date('Y-m-d_H-i-s') . '.csv';
+        $tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $filename;
+        $writer = SimpleExcelWriter::create($tempPath);
+        $writer->addRow([
+            'No. Antrian', 'Nama Pasien', 'Apotek', 'Status', 'Tanggal Pengajuan', 'Tanggal Dibuat', 'Keluhan', 'Diagnosa', 'Obat Non Racikan', 'Obat Racikan', 'Total Item'
+        ]);
+        foreach ($reseps as $resep) {
+            $obatNonRacikan = $resep->items->map(function($item) {
+                return ($item->obatalkes->obatalkes_nama ?? '-') . ' (' . $item->qty . ')';
+            })->join(', ');
+            $obatRacikan = $resep->racikan->map(function($racik) {
+                $items = $racik->racikanItems->map(function($item) {
+                    return ($item->obatalkes->obatalkes_nama ?? '-') . ' (' . $item->qty . ')';
+                })->join(', ');
+                return $racik->nama_racikan . ': ' . $items;
+            })->join('; ');
+            $totalNonRacikan = $resep->items->sum('qty');
+            $totalRacikan = $resep->racikan->sum(function($racik) {
+                return $racik->racikanItems->sum('qty');
+            });
+            $totalItem = $totalNonRacikan + $totalRacikan;
+            $writer->addRow([
+                $resep->no_antrian ?? '-',
+                $resep->nama_pasien,
+                $resep->apotek->nama_apotek ?? '-',
+                ucfirst($resep->status),
+                $resep->tgl_pengajuan ? date('d/m/Y', strtotime($resep->tgl_pengajuan)) : '-',
+                $resep->created_at->format('d/m/Y H:i'),
+                $resep->keluhan ?? '-',
+                $resep->diagnosa ?? '-',
+                $obatNonRacikan ?: '-',
+                $obatRacikan ?: '-',
+                $totalItem
+            ]);
+        }
+        $writer->close();
+        return response()->download($tempPath)->deleteFileAfterSend(true);
     }
 } 

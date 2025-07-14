@@ -17,8 +17,43 @@
             @if(Auth::user()->isPasien())
                 <a href="{{ route('resep.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Buat Resep</a>
             @endif
+            <a href="{{ route('resep.export', ['apotek_id' => $apotekId, 'status' => $status]) }}" class="btn btn-warning"><i class="fas fa-file-excel"></i> Export Excel</a>
         </div>
     </div>
+
+    <!-- Filter Section -->
+    @if(Auth::user()->isAdmin() || Auth::user()->isDokter())
+    <div class="card mb-3">
+        <div class="card-body">
+            <form method="GET" action="{{ route('resep.index') }}" class="row g-3">
+                <div class="col-md-4">
+                    <label for="apotek_id" class="form-label">Filter Apotek</label>
+                    <select name="apotek_id" id="apotek_id" class="form-select">
+                        <option value="">Semua Apotek</option>
+                        @foreach($apoteks as $apotek)
+                            <option value="{{ $apotek->id }}" {{ $apotekId == $apotek->id ? 'selected' : '' }}>
+                                {{ $apotek->nama_apotek }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="status" class="form-label">Filter Status</label>
+                    <select name="status" id="status" class="form-select">
+                        <option value="">Semua Status</option>
+                        <option value="pending" {{ $status == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="diproses" {{ $status == 'diproses' ? 'selected' : '' }}>Diproses</option>
+                        <option value="selesai" {{ $status == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2"><i class="fas fa-filter"></i> Filter</button>
+                    <a href="{{ route('resep.index') }}" class="btn btn-secondary"><i class="fas fa-times"></i> Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    @endif
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif

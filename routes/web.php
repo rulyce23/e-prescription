@@ -57,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/resep/{resep}/pdf', [ResepController::class, 'pdf'])->name('resep.pdf');
     Route::get('/resep-processing', [ResepController::class, 'processing'])->name('resep.processing');
     Route::get('/resep-completed', [ResepController::class, 'completed'])->name('resep.completed');
+    Route::get('/resep-export', [ResepController::class, 'exportExcel'])->name('resep.export');
 
     // API routes for AJAX
     Route::get('/api/obatalkes', [ResepController::class, 'getObatalkes'])->name('api.obatalkes');
