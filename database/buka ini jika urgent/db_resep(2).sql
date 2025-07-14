@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 13, 2025 at 07:38 PM
+-- Generation Time: Jul 14, 2025 at 02:26 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,39 @@ SET time_zone = "+00:00";
 --
 -- Database: `db_resep`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `apotek`
+--
+
+CREATE TABLE `apotek` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `nama_apotek` varchar(255) NOT NULL,
+  `alamat` text NOT NULL,
+  `telepon` varchar(255) DEFAULT NULL,
+  `whatsapp` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `apotek`
+--
+
+INSERT INTO `apotek` (`id`, `nama_apotek`, `alamat`, `telepon`, `whatsapp`, `email`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'Apotek Sejahtera', 'Jl. Sudirman No. 123, Jakarta Pusat', '021-5550123', '081234567890', 'info@apoteksejahtera.com', 1, '2025-07-13 16:26:40', '2025-07-13 16:26:40'),
+(2, 'Apotek Kimia Farma', 'Jl. Thamrin No. 45, Jakarta Pusat', '021-5550456', '081234567891', 'info@kimiafarma.com', 1, '2025-07-13 16:26:40', '2025-07-13 16:26:40'),
+(3, 'Apotek Century', 'Jl. Gatot Subroto No. 67, Jakarta Selatan', '021-5550789', '081234567892', 'info@apotekcentury.com', 1, '2025-07-13 16:26:40', '2025-07-13 16:26:40'),
+(4, 'Apotek K24', 'Jl. Hayam Wuruk No. 89, Jakarta Barat', '021-5550112', '081234567893', 'info@k24.com', 1, '2025-07-13 16:26:40', '2025-07-13 16:26:40'),
+(5, 'Apotek Guardian', 'Jl. Mangga Dua No. 12, Jakarta Utara', '021-5550145', '081234567894', 'info@guardian.com', 1, '2025-07-13 16:26:40', '2025-07-13 16:26:40'),
+(6, 'Apotek Medika', 'Jl. Thamrin No. 456, Jakarta Selatan', '021-5550456', '081234567891', 'contact@apotekmedika.com', 1, '2025-07-13 16:51:39', '2025-07-13 16:51:39'),
+(7, 'Apotek Kesehatan', 'Jl. Gatot Subroto No. 789, Jakarta Barat', '021-5550789', '081234567892', 'admin@apotekkesehatan.com', 1, '2025-07-13 16:51:39', '2025-07-13 16:51:39'),
+(8, 'Apotek Cemerlang', 'Jl. Hayam Wuruk No. 321, Jakarta Utara', '021-5550321', '081234567893', 'info@apotekcemerlang.com', 1, '2025-07-13 16:51:39', '2025-07-13 16:51:39'),
+(9, 'Apotek Harmoni', 'Jl. Asia Afrika No. 654, Bandung', '022-5550654', '081234567894', 'contact@apotekharmoni.com', 1, '2025-07-13 16:51:39', '2025-07-13 16:51:39');
 
 -- --------------------------------------------------------
 
@@ -129,7 +162,31 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (14, '2025_07_13_162942_add_keluhan_diagnosa_to_resep_table', 1),
 (15, '2025_07_13_163556_add_pasien_to_role_enum', 1),
 (16, '2025_07_13_163825_update_resep_status_enum', 1),
-(17, '2025_07_13_164848_add_approval_columns_to_resep_table', 2);
+(17, '2025_07_13_164848_add_approval_columns_to_resep_table', 2),
+(18, '2025_07_13_170000_create_apotek_table', 3),
+(19, '2024_01_01_000007_add_apotek_fields_to_resep_table', 4),
+(20, '2024_01_01_000008_add_farmasi_to_role_enum', 5),
+(21, '2024_01_01_000009_add_no_antrian_to_resep_table', 6),
+(22, '2024_01_01_000010_create_notifications_table', 7);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `type` varchar(255) NOT NULL DEFAULT 'info',
+  `action_url` varchar(255) DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `read_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -170,10 +227,10 @@ INSERT INTO `obatalkes_m` (`id`, `obatalkes_kode`, `obatalkes_nama`, `stok`, `ad
 (9, 'ALK00000449', 'OKSIGEN NASAL CANUL PED 1602/3232', 170.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (10, 'ALK00000012', 'ABBOCATH-T 14 G ORANGE (G713A01)-ABBOTT', 308.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (11, 'OBT00000385', 'MEYLON 8,4% INJEKSI 25 ML', 198.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
-(12, 'OBT00000991', 'CENDO PITHALMIC 10MG/GRAM 5MG EYE GEL', 762.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
-(13, 'ALK00000610', 'NITRILE EXAMINATION POWDER FREE LARGE', 11.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
+(12, 'OBT00000991', 'CENDO PITHALMIC 10MG/GRAM 5MG EYE GEL', 761.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
+(13, 'ALK00000610', 'NITRILE EXAMINATION POWDER FREE LARGE', 10.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (14, 'OBT00000544', 'THROMBOPHOB OINMENT 15 GRAM', 404.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
-(15, 'OBT00000400', 'MUCOPECT DROPS 20 ML', 603.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
+(15, 'OBT00000400', 'MUCOPECT DROPS 20 ML', 602.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (16, 'OBT00000391', 'MINIRIN 0.1 MG TAB', 291.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (17, 'A009', 'Amoxcilin', 100.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
 (18, 'BBK00000095', 'PARAFILM KECIL', 6325.00, NULL, '2021-11-04 11:54:04', NULL, NULL, NULL, NULL, 0, 1, NULL, NULL),
@@ -2719,15 +2776,20 @@ CREATE TABLE `resep` (
   `received_by` bigint(20) UNSIGNED DEFAULT NULL,
   `approved_at` timestamp NULL DEFAULT NULL,
   `rejected_at` timestamp NULL DEFAULT NULL,
-  `received_at` timestamp NULL DEFAULT NULL
+  `received_at` timestamp NULL DEFAULT NULL,
+  `apotek_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `no_antrian` varchar(20) DEFAULT NULL,
+  `tgl_pengajuan` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `resep`
 --
 
-INSERT INTO `resep` (`id`, `user_id`, `keluhan`, `diagnosa`, `nama_pasien`, `status`, `completed_at`, `created_at`, `updated_at`, `deleted_at`, `approved_by`, `rejected_by`, `received_by`, `approved_at`, `rejected_at`, `received_at`) VALUES
-(1, 4, 'sakit pinggang', 'nyeri pinggang', 'adam', 'selesai', '2025-07-13 10:21:53', '2025-07-13 10:09:20', '2025-07-13 10:21:53', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `resep` (`id`, `user_id`, `keluhan`, `diagnosa`, `nama_pasien`, `status`, `completed_at`, `created_at`, `updated_at`, `deleted_at`, `approved_by`, `rejected_by`, `received_by`, `approved_at`, `rejected_at`, `received_at`, `apotek_id`, `no_antrian`, `tgl_pengajuan`) VALUES
+(1, 4, 'sakit pinggang', 'nyeri pinggang', 'adam', 'selesai', '2025-07-13 10:21:53', '2025-07-13 10:09:20', '2025-07-13 17:02:52', '2025-07-13 17:02:52', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 12, 'sakit gigi', 'gigi gusi sakit', 'ruly rizki', 'selesai', '2025-07-13 17:00:24', '2025-07-13 16:59:35', '2025-07-13 17:00:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-07-13'),
+(3, 12, 'ok', 'ok', 'ruly rizki', 'pending', NULL, '2025-07-13 17:23:42', '2025-07-13 17:23:42', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, NULL, '2025-07-14');
 
 -- --------------------------------------------------------
 
@@ -2751,7 +2813,9 @@ CREATE TABLE `resep_items` (
 --
 
 INSERT INTO `resep_items` (`id`, `resep_id`, `obatalkes_id`, `signa_m_id`, `qty`, `aturan_pakai`, `created_at`, `updated_at`) VALUES
-(1, 1, 10, 2, 1, '2x sehari jika kambuh', '2025-07-13 10:09:20', '2025-07-13 10:09:20');
+(1, 1, 10, 2, 1, '2x sehari jika kambuh', '2025-07-13 10:09:20', '2025-07-13 10:09:20'),
+(2, 2, 13, 11, 1, 'makan', '2025-07-13 16:59:35', '2025-07-13 16:59:35'),
+(3, 3, 12, 17, 1, 'test', '2025-07-13 17:23:42', '2025-07-13 17:23:42');
 
 -- --------------------------------------------------------
 
@@ -2775,7 +2839,8 @@ CREATE TABLE `resep_racikan` (
 --
 
 INSERT INTO `resep_racikan` (`id`, `resep_id`, `nama_racikan`, `signa_m_id`, `aturan_pakai`, `qty`, `created_at`, `updated_at`) VALUES
-(1, 1, 'ragone', 3, 'ada', 1, '2025-07-13 10:09:20', '2025-07-13 10:09:20');
+(1, 1, 'ragone', 3, 'ada', 1, '2025-07-13 10:09:20', '2025-07-13 10:09:20'),
+(2, 2, 'glyson oral', 16, 'makan', 5, '2025-07-13 16:59:35', '2025-07-13 16:59:35');
 
 -- --------------------------------------------------------
 
@@ -2798,7 +2863,8 @@ CREATE TABLE `resep_racikan_items` (
 
 INSERT INTO `resep_racikan_items` (`id`, `racikan_id`, `obatalkes_id`, `qty`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 1, '2025-07-13 10:09:20', '2025-07-13 10:09:20'),
-(2, 1, 14, 1, '2025-07-13 10:09:20', '2025-07-13 10:09:20');
+(2, 1, 14, 1, '2025-07-13 10:09:20', '2025-07-13 10:09:20'),
+(3, 2, 15, 1, '2025-07-13 16:59:35', '2025-07-13 16:59:35');
 
 -- --------------------------------------------------------
 
@@ -3857,32 +3923,50 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('admin','dokter','apoteker','pasien') DEFAULT 'dokter',
+  `role` enum('admin','dokter','apoteker','farmasi','pasien') DEFAULT 'dokter',
   `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `no_hp` varchar(255) DEFAULT NULL,
+  `nip` varchar(255) DEFAULT NULL,
+  `apotek_id` bigint(20) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Administrator', 'admin@eprescription.com', '2025-07-13 09:42:27', '$2y$12$cAIBB43rV5CMVkb5VxMQG.N04cW2fZf5CdrOPDiCeJbFzUbTkaqpK', 'admin', NULL, '2025-07-13 09:42:27', '2025-07-13 09:42:27'),
-(2, 'Dr. Sarah Johnson', 'dokter@eprescription.com', '2025-07-13 09:42:27', '$2y$12$wC4fCaobrg5E.358EJ8V1ODmHHfUkoL/rRERBMjL6jIcvOX.yHAcy', 'dokter', NULL, '2025-07-13 09:42:27', '2025-07-13 09:42:27'),
-(3, 'Apt. Michael Chen', 'apoteker@eprescription.com', '2025-07-13 09:42:27', '$2y$12$zdgxY49uNTstEyvHaZ8yCOJNMbVxWDvWrZT8UvboIxC7FY1Wxgyoe', 'apoteker', NULL, '2025-07-13 09:42:27', '2025-07-13 09:42:27'),
-(4, 'Budi Santoso', 'pasien1@eprescription.com', '2025-07-13 09:42:28', '$2y$12$yrqPvK2hjTDrLqlYpejLzOE5zbAnjR928N5IIR6fKbdFw3U46qsI6', 'pasien', NULL, '2025-07-13 09:42:28', '2025-07-13 09:42:28'),
-(5, 'Siti Nurhaliza', 'pasien2@eprescription.com', '2025-07-13 09:42:28', '$2y$12$GycW/PHlpgq5WEJa.k0e4eTKGdRHEixkaMTsIml3pzjiltZ1axqMC', 'pasien', NULL, '2025-07-13 09:42:28', '2025-07-13 09:42:28'),
-(6, 'Ahmad Rizki', 'pasien3@eprescription.com', '2025-07-13 09:42:28', '$2y$12$zFuQ4RPsUqBzMxjJJE9u/et/FvZnGIXHxUCzcd79f9icx5vPhzWMm', 'pasien', NULL, '2025-07-13 09:42:28', '2025-07-13 09:42:28'),
-(7, 'Dewi Sartika', 'pasien4@eprescription.com', '2025-07-13 09:42:28', '$2y$12$nYExSQm7PHBRA9tmVzKE.u96rnZfXi2pTYeARdVavgiYlxBD04jlC', 'pasien', NULL, '2025-07-13 09:42:28', '2025-07-13 09:42:28'),
-(8, 'Rudi Hartono', 'pasien5@eprescription.com', '2025-07-13 09:42:29', '$2y$12$jF1dk49ZDSd1mHhvxKzKNuAaHRYMKj2h1SNrtbiryKwb3X1OMEae2', 'pasien', NULL, '2025-07-13 09:42:29', '2025-07-13 09:42:29'),
-(9, 'Pasien Test', 'pasien@test.com', NULL, '$2y$12$BMjMwGZebV.XbxH5IISyouCMeawyLdj.H3y3SSuvV4NDj0fwpN/jq', 'pasien', NULL, '2025-07-13 09:42:30', '2025-07-13 09:42:30'),
-(10, 'Apoteker Test', 'apoteker@test.com', NULL, '$2y$12$nglOv62GrXIQOHElDnugHe/CAaqzjhg6HqUZU6na0tRoUFnmc15pq', 'apoteker', NULL, '2025-07-13 09:42:30', '2025-07-13 09:42:30'),
-(11, 'Admin Test', 'admin@test.com', NULL, '$2y$12$ms46vNSmHwqU3JCFEJ1Upu.pkd3cZKf8Y/QbJWmXRrpBGXpLd0b3u', 'admin', NULL, '2025-07-13 09:42:30', '2025-07-13 09:42:30');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`, `no_hp`, `nip`, `apotek_id`) VALUES
+(1, 'Administrator', 'admin@eprescription.com', '2025-07-13 17:04:39', '$2y$12$94sdMViUZ0H7obq5dlzGBetaCPoKXS.4E4GnWSRL.MCAP3KhEpSYq', 'admin', NULL, '2025-07-13 09:42:27', '2025-07-13 17:04:39', NULL, NULL, NULL),
+(2, 'Dr. Sarah Johnson', 'dokter@eprescription.com', '2025-07-13 17:04:39', '$2y$12$1Y.cs3DQBkLe2kgAFKu4KemGS/OdwJT1Yp6jy6MWpnkOVOeNuxt3e', 'dokter', NULL, '2025-07-13 09:42:27', '2025-07-13 17:04:39', NULL, NULL, 3),
+(3, 'Apt. Michael Chen', 'apoteker@eprescription.com', '2025-07-13 09:42:27', '$2y$12$zdgxY49uNTstEyvHaZ8yCOJNMbVxWDvWrZT8UvboIxC7FY1Wxgyoe', 'apoteker', NULL, '2025-07-13 09:42:27', '2025-07-13 09:42:27', NULL, NULL, 3),
+(4, 'Budi Santoso', 'pasien1@eprescription.com', '2025-07-13 17:04:40', '$2y$12$sLfy9IllEChRe6d8FgaY7eVloVWGiear0gUdwEr7QV4dBpeiLcBjm', 'pasien', NULL, '2025-07-13 09:42:28', '2025-07-13 17:04:40', '081234567894', NULL, NULL),
+(5, 'Siti Nurhaliza', 'pasien2@eprescription.com', '2025-07-13 17:04:41', '$2y$12$Be4u7hVgXCnvMcddvTRK9.uQaQB4at5O8Rp0OfS1qgRPXxumjoW42', 'pasien', NULL, '2025-07-13 09:42:28', '2025-07-13 17:04:41', '081234567895', NULL, NULL),
+(6, 'Ahmad Rizki', 'pasien3@eprescription.com', '2025-07-13 17:04:41', '$2y$12$9jj9kggclnNLPAy6QgmYReRwcyLwhtKjMjkoKvy8FHidmu.0ZXJpy', 'pasien', NULL, '2025-07-13 09:42:28', '2025-07-13 17:04:41', '081234567896', NULL, NULL),
+(7, 'Dewi Sartika', 'pasien4@eprescription.com', '2025-07-13 17:04:41', '$2y$12$6bGIzRYq0v16Gtbp5Xi3IeakyE5j4tBE2yafPWhHpmK836X0up4mC', 'pasien', NULL, '2025-07-13 09:42:28', '2025-07-13 17:04:41', '081234567897', NULL, NULL),
+(8, 'Rudi Hartono', 'pasien5@eprescription.com', '2025-07-13 17:04:41', '$2y$12$HhN4d5YkkNedSKvA28ycv.Zb0t2S7YdYyC2alMKJydVrSfkhLvVja', 'pasien', NULL, '2025-07-13 09:42:29', '2025-07-13 17:04:41', '081234567898', NULL, NULL),
+(9, 'Pasien Test', 'pasien@test.com', NULL, '$2y$12$BMjMwGZebV.XbxH5IISyouCMeawyLdj.H3y3SSuvV4NDj0fwpN/jq', 'pasien', NULL, '2025-07-13 09:42:30', '2025-07-13 09:42:30', NULL, NULL, NULL),
+(10, 'Apoteker Test', 'apoteker@test.com', NULL, '$2y$12$nglOv62GrXIQOHElDnugHe/CAaqzjhg6HqUZU6na0tRoUFnmc15pq', 'apoteker', NULL, '2025-07-13 09:42:30', '2025-07-13 09:42:30', NULL, NULL, NULL),
+(11, 'Admin Test', 'admin@test.com', NULL, '$2y$12$ms46vNSmHwqU3JCFEJ1Upu.pkd3cZKf8Y/QbJWmXRrpBGXpLd0b3u', 'admin', NULL, '2025-07-13 09:42:30', '2025-07-13 09:42:30', NULL, NULL, NULL),
+(12, 'ruly rizki', 'rulyce23@gmail.com', NULL, '$2y$12$AJXQOktFHHLS5zs8PYYWE.teu11I1ddUQliWbcNV80n3PIEl0.nfi', 'dokter', NULL, '2025-07-13 10:53:09', '2025-07-13 10:53:09', NULL, NULL, NULL),
+(13, 'ruly rizki perdana', 'ruperzki23@gmail.com', NULL, '$2y$12$GVRpGfCtozWiGVJ2.7AMWuJcOFsxQfSjdASCNIvtICUuFDJKSKKta', 'pasien', NULL, '2025-07-13 10:55:39', '2025-07-13 10:55:39', NULL, NULL, NULL),
+(14, 'Administrator', 'admin@eresep.com', NULL, '$2y$10$hDwaTQmuuzYp7KlVzv0HrOzQNHrnqWh1fwPOSG7nhvjjk0Sab0nZ.', 'admin', NULL, '2025-07-13 16:31:23', '2025-07-13 16:31:23', '081234567890', 'ADM001', NULL),
+(15, 'Dr. Apotek Sejahtera Dokter', 'dokter1@eresep.com', NULL, '$2y$10$nZ3wu/L6SVpNYy2WjndmjuQTfI2Vag9DSiA4cUXsVqBZAfZUI/GJq', 'dokter', NULL, '2025-07-13 16:31:23', '2025-07-13 16:31:23', '081234567810', 'DOK001', 1),
+(16, 'Apt. Apotek Sejahtera Apoteker', 'apoteker1@eresep.com', NULL, '$2y$12$IFjUfoRRxbWgg8mGC.N3We8pGBEnae/6jRGWUe2KZXpuvcy3hltFu', 'apoteker', NULL, '2025-07-13 16:31:23', '2025-07-13 17:00:05', '081234567820', 'APT001', 1),
+(17, 'Apt. Michael Chen', 'apoteker@apoteksejahtera.com', '2025-07-13 17:04:40', '$2y$12$V8/1I/dg5oQz6E54nrilh.xsBUv0fokOZk3ScZQAJhsVUxzidhVb2', 'apoteker', NULL, '2025-07-13 17:04:40', '2025-07-13 17:04:40', '081234567890', NULL, 1),
+(18, 'Farmasi Linda Sari', 'farmasi@apoteksejahtera.com', '2025-07-13 17:04:40', '$2y$12$KimrkocHmjPE6rO4101QRerDKW1/Axxy.L/l1EavQYwtn0UDTxCVG', 'farmasi', NULL, '2025-07-13 17:04:40', '2025-07-13 17:04:40', '081234567891', NULL, 1),
+(19, 'Apt. Siti Nurhaliza', 'apoteker@apotekmedika.com', '2025-07-13 17:04:40', '$2y$12$KYXi6CyxotDA9BAJ416HeOZvS10EneNf9cbxY54eaN82IC4ZrCFFK', 'apoteker', NULL, '2025-07-13 17:04:40', '2025-07-13 17:04:40', '081234567892', NULL, 6),
+(20, 'Farmasi Budi Santoso', 'farmasi@apotekmedika.com', '2025-07-13 17:04:40', '$2y$12$ljuhrFyiPaoYzAHrY8fRVen5L9yj9Vi/XvK2XQ8ips0W5FD.jCtiK', 'farmasi', NULL, '2025-07-13 17:04:40', '2025-07-13 17:04:40', '081234567893', NULL, 6);
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `apotek`
+--
+ALTER TABLE `apotek`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `cache`
@@ -3923,6 +4007,13 @@ ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `notifications_user_id_foreign` (`user_id`);
+
+--
 -- Indexes for table `obatalkes_m`
 --
 ALTER TABLE `obatalkes_m`
@@ -3950,7 +4041,8 @@ ALTER TABLE `resep`
   ADD KEY `resep_user_id_foreign` (`user_id`),
   ADD KEY `resep_approved_by_foreign` (`approved_by`),
   ADD KEY `resep_rejected_by_foreign` (`rejected_by`),
-  ADD KEY `resep_received_by_foreign` (`received_by`);
+  ADD KEY `resep_received_by_foreign` (`received_by`),
+  ADD KEY `resep_apotek_id_foreign` (`apotek_id`);
 
 --
 -- Indexes for table `resep_items`
@@ -4003,6 +4095,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `apotek`
+--
+ALTER TABLE `apotek`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -4018,7 +4116,13 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `obatalkes_m`
@@ -4036,25 +4140,25 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `resep`
 --
 ALTER TABLE `resep`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `resep_items`
 --
 ALTER TABLE `resep_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `resep_racikan`
 --
 ALTER TABLE `resep_racikan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `resep_racikan_items`
 --
 ALTER TABLE `resep_racikan_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `signa_m`
@@ -4066,16 +4170,23 @@ ALTER TABLE `signa_m`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Constraints for dumped tables
 --
 
 --
+-- Constraints for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD CONSTRAINT `notifications_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `resep`
 --
 ALTER TABLE `resep`
+  ADD CONSTRAINT `resep_apotek_id_foreign` FOREIGN KEY (`apotek_id`) REFERENCES `apotek` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `resep_approved_by_foreign` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `resep_received_by_foreign` FOREIGN KEY (`received_by`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `resep_rejected_by_foreign` FOREIGN KEY (`rejected_by`) REFERENCES `users` (`id`),

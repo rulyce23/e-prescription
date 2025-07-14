@@ -22,6 +22,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'role',
+        'apotek_id',
+        'no_hp',
     ];
 
     /**
@@ -58,6 +60,30 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the apotek associated with this user
+     */
+    public function apotek()
+    {
+        return $this->belongsTo(Apotek::class);
+    }
+
+    /**
+     * Get notifications for this user
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * Get unread notifications for this user
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->unread();
+    }
+
+    /**
      * Check if user is admin
      */
     public function isAdmin()
@@ -79,6 +105,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isApoteker()
     {
         return $this->role === 'apoteker';
+    }
+
+    /**
+     * Check if user is farmasi
+     */
+    public function isFarmasi()
+    {
+        return $this->role === 'farmasi';
     }
 
     /**
@@ -126,7 +160,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function canReceivePrescription()
     {
-        return $this->role === 'apoteker';
+        return in_array($this->role, ['apoteker', 'farmasi']);
     }
 
     /**
@@ -154,6 +188,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'admin' => 'Administrator',
             'dokter' => 'Dokter',
             'apoteker' => 'Apoteker',
+            'farmasi' => 'Farmasi',
             'pasien' => 'Pasien'
         ];
         

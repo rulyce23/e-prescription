@@ -7,6 +7,20 @@
     .racikan-card { border: 1px solid #dee2e6; border-radius: 8px; padding: 16px; margin-bottom: 16px; background: #f8f9fa; }
     .racikan-title { font-weight: bold; margin-bottom: 8px; }
     .draft-table th, .draft-table td { vertical-align: middle !important; }
+    
+    /* Styling untuk field read-only */
+    input[readonly] {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        color: #6c757d;
+        cursor: not-allowed;
+    }
+    
+    input[readonly]:focus {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        box-shadow: none;
+    }
 </style>
 @endpush
 
@@ -17,10 +31,25 @@
     @csrf
         <div class="mb-3">
             <label for="nama_pasien" class="form-label">Nama Pasien</label>
-            <input type="text" class="form-control @error('nama_pasien') is-invalid @enderror" id="nama_pasien" name="nama_pasien" value="{{ old('nama_pasien') }}" required>
+            <input type="text" class="form-control @error('nama_pasien') is-invalid @enderror" id="nama_pasien" name="nama_pasien" value="{{ $user->name }}" readonly required>
+            <div class="form-text text-muted">
+                <i class="fas fa-info-circle"></i> Nama pasien otomatis terisi sesuai dengan akun yang login.
+            </div>
             @error('nama_pasien')<div class="invalid-feedback">{{ $message }}</div>@enderror
         </div>
-                    <div class="mb-3">
+        <div class="mb-3">
+            <label for="apotek_id" class="form-label">Pilih Apotek</label>
+            <select class="form-select @error('apotek_id') is-invalid @enderror" id="apotek_id" name="apotek_id" required>
+                <option value="">Pilih Apotek</option>
+                @foreach($apotek as $apt)
+                    <option value="{{ $apt->id }}" {{ old('apotek_id') == $apt->id ? 'selected' : '' }}>
+                        {{ $apt->nama_apotek }} - {{ $apt->alamat }}
+                    </option>
+                @endforeach
+            </select>
+            @error('apotek_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        </div>
+        <div class="mb-3">
             <label for="keluhan" class="form-label">Keluhan</label>
             <textarea class="form-control @error('keluhan') is-invalid @enderror" id="keluhan" name="keluhan" required>{{ old('keluhan') }}</textarea>
             @error('keluhan')<div class="invalid-feedback">{{ $message }}</div>@enderror

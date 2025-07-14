@@ -57,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/resep/{resep}/pdf', [ResepController::class, 'pdf'])->name('resep.pdf');
     Route::get('/resep-processing', [ResepController::class, 'processing'])->name('resep.processing');
     Route::get('/resep-completed', [ResepController::class, 'completed'])->name('resep.completed');
+    Route::get('/resep-export', [ResepController::class, 'exportExcel'])->name('resep.export');
 
     // API routes for AJAX
     Route::get('/api/obatalkes', [ResepController::class, 'getObatalkes'])->name('api.obatalkes');
@@ -65,4 +66,10 @@ Route::middleware(['auth'])->group(function () {
     // Master data routes (restricted to admin, dokter, apoteker)
     Route::resource('obatalkes', ObatalkesController::class);
     Route::resource('signa', SignaController::class);
+
+    // Notification routes
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/mark-read', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
+    Route::post('/notifications/mark-all-read', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::get('/notifications/unread-count', [App\Http\Controllers\NotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
 });

@@ -9,6 +9,7 @@
         <div>
             <a href="{{ route('resep.index') }}" class="btn btn-secondary"><i class="fas fa-list"></i> Semua Resep</a>
             <a href="{{ route('resep.completed') }}" class="btn btn-success"><i class="fas fa-check"></i> Resep Selesai</a>
+            <a href="{{ route('resep.export', ['status' => 'diproses']) }}" class="btn btn-warning"><i class="fas fa-file-excel"></i> Export Excel</a>
         </div>
     </div>
     @if(session('success'))

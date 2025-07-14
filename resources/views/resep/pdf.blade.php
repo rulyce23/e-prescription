@@ -23,16 +23,22 @@
     </div>
     <table class="info-table">
         <tr>
+            <td><strong>No. Antrian</strong></td>
+            <td>{{ $resep->no_antrian ?? '-' }}</td>
             <td><strong>Pasien</strong></td>
             <td>{{ $resep->nama_pasien }}</td>
-            <td><strong>User</strong></td>
-            <td>{{ $resep->user->name ?? '-' }}</td>
         </tr>
         <tr>
-            <td><strong>Tanggal</strong></td>
-            <td>{{ $resep->created_at->format('d/m/Y H:i') }}</td>
+            <td><strong>User</strong></td>
+            <td>{{ $resep->user->name ?? '-' }}</td>
             <td><strong>Status</strong></td>
             <td>{{ $resep->status }}</td>
+        </tr>
+        <tr>
+            <td><strong>Tanggal Pengajuan</strong></td>
+            <td>{{ $resep->tgl_pengajuan ? date('d/m/Y', strtotime($resep->tgl_pengajuan)) : '-' }}</td>
+            <td><strong>Tanggal Dibuat</strong></td>
+            <td>{{ $resep->created_at->format('d/m/Y H:i') }}</td>
         </tr>
         <tr>
             <td><strong>Keluhan</strong></td>

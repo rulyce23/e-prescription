@@ -13,6 +13,7 @@ class Resep extends Model
 
     protected $fillable = [
         'user_id',
+        'apotek_id',
         'obatalkes_id',
         'signa_m_id',
         'nama_pasien',
@@ -21,6 +22,7 @@ class Resep extends Model
         'status',
         'keluhan',
         'diagnosa',
+        'tgl_pengajuan',
         'approved_by',
         'rejected_by',
         'received_by',
@@ -40,6 +42,11 @@ class Resep extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function apotek()
+    {
+        return $this->belongsTo(Apotek::class);
     }
 
     public function approver()
@@ -115,6 +122,6 @@ class Resep extends Model
 
     public function scopeCompleted($query)
     {
-        return $query->where('status', 'completed');
+        return $query->where('status', 'selesai');
     }
 } 
